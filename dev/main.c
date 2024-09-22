@@ -224,7 +224,7 @@ void main(void)
 
     DRS *drs = DRS_new();
     PowerLimit *pl = PL_new(); 
-    PID *plPID = PID_new(1.0,1.0,0.0,0.0);
+    PID *plPID = PID_new(1.0,0.0,0.0,0.0);
     PID *lcPID = PID_new(20.0,0.0,0.0,0.0);
     PID_resetPIDerror(lcPID, 170.0);
 //---------------------------------------------------------------------------------------------------------
@@ -427,11 +427,12 @@ void main(void)
         //MCM_setRegenMode(mcm0, REGENMODE_FORMULAE); // TODO: Read regen mode from DCU CAN message - Issue #96
         // MCM_readTCSSettings(mcm0, &Sensor_TCSSwitchUp, &Sensor_TCSSwitchDown, &Sensor_TCSKnob);
         slipRatioCalculation(wss, lc);
+        PID_setGain(lcPID, 20.0, 0.0, 0.0);
         launchControlTorqueCalculation(lc, tps, bps, mcm0,lcPID);
         //---------------------------------------------------------------------------------------------------------
         // input the power limit calculation here from mcm 
         //---------------------------------------------------------------------------------------------------------
-        PID_setGain(plPID, 1.0, 1.0, 0.0);
+        PID_setGain(plPID, 1.0, 0.0, 0.0);
         powerLimitTorqueCalculation(tps, mcm0, pl, bms, wss, plPID);
         MCM_calculateCommands(mcm0, tps, bps);
 
