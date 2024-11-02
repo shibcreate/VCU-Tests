@@ -35,7 +35,7 @@ void populatePLHashTable(HashTable* table)
     rpm is y axis 
     values are in tq nM
     */
-    ubyte4 lookupTable[25][25] = {
+    int lookupTable[26][26] = {
  {230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85},
     {230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85},
     {230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85, 230.85},
@@ -62,11 +62,11 @@ void populatePLHashTable(HashTable* table)
     {6.53, 38.77, 54.98, 67.36, 77.86, 87.05, 89.30, 89.95, 90.02, 89.98, 90.15, 90.22, 90.28, 90.33, 90.39, 90.43, 90.46, 90.50, 90.53, 90.58, 90.61, 90.62, 90.65, 90.68, 90.69},
     {0.11, 15.10, 39.59, 54.25, 65.79, 75.63, 84.12, 85.94, 86.28, 86.37, 86.42, 86.48, 86.53, 86.39, 86.58, 86.62, 86.73, 86.83, 86.81, 86.84, 86.81, 86.79, 86.93, 86.95, 86.99}};
 
-    for (ubyte1 row = 0; row < NUM_S; ++row) {
-        for(ubyte1 column = 0; column < NUM_V; ++column) {
-            ubyte2 noLoadVoltage = VOLTAGE_MIN + column * VOLTAGE_STEP;
-            ubyte2 rpm   = RPM_MIN + row * RPM_STEP;
-            ubyte4 value = lookupTable[row][column];
+    for (int row = 0; row < NUM_S; ++row) {
+        for(int column = 0; column < NUM_V; ++column) {
+            int noLoadVoltage = VOLTAGE_MIN + column * VOLTAGE_STEP;
+            int rpm   = RPM_MIN + row * RPM_STEP;
+            int value = lookupTable[row][column];
             insert(table, noLoadVoltage, rpm, value);
         }
     }
