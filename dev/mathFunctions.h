@@ -30,4 +30,7 @@ sbyte4 swap_int32(sbyte4 val);
 
 ubyte2 floorToNearestIncrement(ubyte2 value, ubyte2 increment);
 ubyte2 ceilToNearestIncrement(ubyte2 value, ubyte2 increment);
+
+int int_lowerStepInterval(int value, int increment);
+int int_upperStepInterval(int value, int increment);
 #endif //  _MATHFUNCTIONS_H

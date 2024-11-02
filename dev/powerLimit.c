@@ -12,14 +12,14 @@
 #ifndef CALCS
 #define CALCS
 
-#define VOLTAGE_MIN      (float) 283.200
-#define VOLTAGE_MAX      (float) 403.200
-#define RPM_MIN          (sbyte4) 100
-#define RPM_MAX          (sbyte4) 6000
-#define NUM_V            (ubyte1) 25
-#define NUM_S            (ubyte1) 25
-#define VOLTAGE_STEP     (float) 5.0       //float voltageStep = (Voltage_MAX - Voltage_MIN) / (NUM_V - 1); // 5
-#define RPM_STEP         (float) 245.8333 //sbyte4 rpmStep = (RPM_MAX - RPM_MIN) / (NUM_S - 1); // 245.8333
+#define VOLTAGE_MIN      (int) 280
+#define VOLTAGE_MAX      (int) 403//not needed
+#define RPM_MIN          (int) 2000
+#define RPM_MAX          (int) 6000
+#define NUM_V            (int) 25
+#define NUM_S            (int) 25
+#define VOLTAGE_STEP     (int) 5     //float voltageStep = (Voltage_MAX - Voltage_MIN) / (NUM_V - 1); // 5
+#define RPM_STEP         (int) 160 //sbyte4 rpmStep = (RPM_MAX - RPM_MIN) / (NUM_S - 1); // 245.8333
 #define PI               (float) 3.14159
 #define KWH_LIMIT        (float) 55000.0  // watts
 #define PL_INIT          (float) 55000.0  // 5kwh buffer to init PL before PL limit is hit
@@ -96,28 +96,27 @@ float noloadvoltagecalc(){
 float getTorque(PowerLimit* me, HashTable* torque_hashtable, float voltage, float rpm){ 
     
     // LUT Lower Bounds
-    int VOLTAGE_MIN      = 280;
-    int RPM_MIN          = 2000;
-
+    int volt = (int)(voltage);
+    int speed = (int)(rpm);
     // Calculating hashtable keys
-    int rpmInput         = rpm - RPM_MIN;
-    int voltageInput     = voltage - VOLTAGE_MIN;
+    int rpmInput         = speed - RPM_MIN;
+    int voltageInput     =  volt - VOLTAGE_MIN;
     int voltageFloor     = int_lowerStepInterval(voltageInput, VOLTAGE_STEP) + VOLTAGE_MIN;
     int voltageCeiling   = int_upperStepInterval(voltageInput, VOLTAGE_STEP) + VOLTAGE_MIN;
     int rpmFloor         = int_lowerStepInterval(rpmInput, RPM_STEP) + RPM_MIN;
     int rpmCeiling       = int_upperStepInterval(rpmInput, RPM_STEP) + RPM_MIN;
     
     // Calculating these now to speed up interpolation later in method
-    int voltageLowerDiff = voltage - voltageFloor;
-    int voltageUpperDiff = voltageCeiling - voltage;
-    int rpmLowerDiff     = rpm - rpmFloor;
-    int rpmUpperDiff     = rpmCeiling - rpm;
+    int voltageLowerDiff = volt - voltageFloor;
+    int voltageUpperDiff = voltageCeiling - volt;
+    int rpmLowerDiff     = speed - rpmFloor;
+    int rpmUpperDiff     = rpmCeiling - speed;
 
     // Retrieve torque values from the hash table for the four corners
-    int vFloorRFloor     = HashTable_getValue(torque_hashtable, voltageFloor, rpmFloor);
-    int vFloorRCeiling   = HashTable_getValue(torque_hashtable, voltageFloor, rpmCeiling);
-    int vCeilingRFloor   = HashTable_getValue(torque_hashtable, voltageCeiling, rpmFloor);
-    int vCeilingRCeiling = HashTable_getValue(torque_hashtable, voltageCeiling, rpmCeiling);
+    int vFloorRFloor     = get(torque_hashtable, voltageFloor, rpmFloor);
+    int vFloorRCeiling   = get(torque_hashtable, voltageFloor, rpmCeiling);
+    int vCeilingRFloor   = get(torque_hashtable, voltageCeiling, rpmFloor);
+    int vCeilingRCeiling = get(torque_hashtable, voltageCeiling, rpmCeiling);
 
     // Calculate interpolation values
     int stepDivider          = VOLTAGE_STEP      * RPM_STEP;
@@ -204,7 +203,7 @@ void powerLimitTorqueCalculation(TorqueEncoder* tps, MotorController* mcm, Power
      {// kwhlimit should be changed to another paramter we make for plthreshold
         me-> PLstatus = TRUE;
       // still need to make/ update all the struct parameters aka values for can validation 
-       float pidsetpoint = (float)(getTorque(me, me->hashtable,noloadvoltage,wheelspeed)); // in dnm
+       float pidsetpoint = (float)(getTorque(me, me->hashtable,noLoadVoltage,wheelspeed)); // in dnm
         me->pidsetpoint = pidsetpoint;
        PID_setpointUpdate(pid,pidsetpoint);
        PID_dtUpdate(pid, 0.01);// 10ms this update function sets the dt to the same exact value every iteration. why not just set when initializing the pid and then forgo this set?

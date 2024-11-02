@@ -121,3 +121,11 @@ ubyte2 floorToNearestIncrement(ubyte2 value, ubyte2 increment) {
 ubyte2 ceilToNearestIncrement(ubyte2 value, ubyte2 increment) {
     return ((value + increment - 1) / increment) * increment; // floorval & 0xFFFD
 }
+
+int int_lowerStepInterval(int value, int increment) {
+    return (int)(value - (value % increment));
+}
+int int_upperStepInterval(int value, int increment) {
+    int temp = int_lowerStepInterval(value, increment);
+    return (int)(temp == value?temp:temp + increment);
+}
