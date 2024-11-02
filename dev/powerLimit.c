@@ -24,6 +24,7 @@
 #define KWH_LIMIT        (float4) 55000.0  // watts
 #define PL_INIT          (float4) 55000.0  // 5kwh buffer to init PL before PL limit is hit
 #define UNIT_CONVERSTION (float4) 95.49    // 9.549 *10.0 to convert to deci-newtonmeters
+#define KWH_THRESHOLD    (float) 50
 
 #endif
 

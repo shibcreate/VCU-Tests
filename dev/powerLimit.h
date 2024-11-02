@@ -31,6 +31,11 @@ typedef struct _PowerLimit {
     float estimatedTQ; // in dNm
     float setpointTQ;// in dNm
 
+    float piderror; 
+    float plfinaltq; 
+    float pidsetpoint; 
+    float pidactual; 
+
 } PowerLimit;
 
 void powerLimitTorqueCalculation(TorqueEncoder* tps, MotorController* mcm, PowerLimit* me, BatteryManagementSystem *bms, WheelSpeeds* ws, PID* pid);

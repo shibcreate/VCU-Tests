@@ -741,8 +741,8 @@ void canOutput_sendDebugMessage(CanManager* me, TorqueEncoder* tps, BrakePressur
     canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
     canMessages[canMessageCount - 1].data[byteNum++] = lc->LCReady;
     canMessages[canMessageCount - 1].data[byteNum++] = lc->LCStatus;
-    canMessages[canMessageCount - 1].data[byteNum++] = me->lcTorque;
-    canMessages[canMessageCount - 1].data[byteNum++] = me->lcTorque >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = lc->lcTorque;
+    canMessages[canMessageCount - 1].data[byteNum++] = lc->lcTorque >> 8;
     canMessages[canMessageCount - 1].data[byteNum++] = (sbyte2)lc->slipRatio;
     canMessages[canMessageCount - 1].data[byteNum++] = (sbyte2)lc->slipRatio >> 8;
     canMessages[canMessageCount - 1].data[byteNum++] = Sensor_LCButton.sensorValue;
@@ -791,7 +791,7 @@ void canOutput_sendDebugMessage(CanManager* me, TorqueEncoder* tps, BrakePressur
     canMessages[canMessageCount - 1].data[byteNum++] = BMS_getHighestCellTemp_d_degC(bms);
     canMessages[canMessageCount - 1].data[byteNum++] = (BMS_getHighestCellTemp_d_degC(bms) >> 8);
     canMessages[canMessageCount - 1].data[byteNum++] = (sbyte2) BMS_getPower_W(bms)/1000; // actual power in kw (truncated) POWER LIMIT STUFF
-    canMessages[canMessageCount - 1].data[byteNum++] =  (sbyte2) BMS_getPower_W(bms)/1000 >>8;//POWER LIMIT STUFF
+    canMessages[canMessageCount - 1].data[byteNum++] = (sbyte2) BMS_getPower_W(bms)/1000 >>8;//POWER LIMIT STUFF
     canMessages[canMessageCount - 1].data[byteNum++] = (ubyte2)BMS_getPackCurrent(bms)/1000;
     canMessages[canMessageCount - 1].length = byteNum;
 
@@ -865,7 +865,6 @@ void canOutput_sendDebugMessage(CanManager* me, TorqueEncoder* tps, BrakePressur
     canMessages[canMessageCount - 1].data[byteNum++] = ((ubyte2)(pl->pidactual))>> 8;        //table input
     canMessages[canMessageCount - 1].data[byteNum++] = (ubyte2)(pl->pidsetpoint);
     canMessages[canMessageCount - 1].data[byteNum++] =((ubyte2)(pl->pidsetpoint))>> 8;
-
     canMessages[canMessageCount - 1].data[byteNum++] = ((ubyte2)(pl->plfinaltq)); 
     canMessages[canMessageCount - 1].data[byteNum++] = ((ubyte2)(pl->plfinaltq))>> 8;     //table output
     canMessages[canMessageCount - 1].length = byteNum;
