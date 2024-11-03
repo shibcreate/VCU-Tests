@@ -2,6 +2,8 @@ name: Static Analysis and Formatting
 
 on:
   pull_request:
+    branches:
+      - main  # Only triggers for PRs targeting the main branch
 
 jobs:
   static-analysis:
