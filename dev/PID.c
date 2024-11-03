@@ -9,7 +9,7 @@ PID* PID_new(ubyte2 Kp, ubyte2 Ki, ubyte2 Kd, ubyte2 setpoint){
     pid->setpoint = setpoint; 
     pid->previousError = 0;
     pid->totalError    = 0;
-    pid->dt           = 0.01;
+    pid->dt            = 0.01;
     return pid;
 }
 void  PID_setpointUpdate(PID *pid, ubyte2 setpoint){

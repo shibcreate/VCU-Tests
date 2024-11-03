@@ -737,13 +737,13 @@ void canOutput_sendDebugMessage(CanManager* me, TorqueEncoder* tps, BrakePressur
     canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
     canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
     canMessages[canMessageCount - 1].data[byteNum++] = pl->PLStatus;
-    canMessages[canMessageCount - 1].data[byteNum++] = (ubyte2)pl->value;
-    canMessages[canMessageCount - 1].data[byteNum++] = (ubyte2)pl->value >> 8;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
+    canMessages[canMessageCount - 1].data[byteNum++] = (ubyte2)pl->setpoint;
+    canMessages[canMessageCount - 1].data[byteNum++] = (ubyte2)pl->setpoint >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = (ubyte2)pl->actual;
+    canMessages[canMessageCount - 1].data[byteNum++] = (ubyte2)pl->actual >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = (sbyte2)pl->piderror;
+    canMessages[canMessageCount - 1].data[byteNum++] = (sbyte2)pl->piderror >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = pl->PLMethod;// 0-tq method /1-lut method
     canMessages[canMessageCount - 1].length = byteNum;
     /*
     //50B: Launch Control

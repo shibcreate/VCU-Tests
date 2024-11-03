@@ -224,6 +224,8 @@ void main(void)
     DRS *drs = DRS_new();
     PowerLimit *pl = PL_new();
     PID *pid = PID_new(3,0,0,0);
+    HashTable *table = HashTable_new();
+    fillhashtable(table);
 
     //----------------------------------------------------------------------------
     // TODO: Additional Initial Power-up functions
@@ -376,7 +378,6 @@ void main(void)
         
         //Cool DRS things
         DRS_update(drs, mcm0, tps, bps);
-        testing(pl);
 
         //DataAquisition_update(); //includes accelerometer
         //TireModel_update()
@@ -426,7 +427,10 @@ void main(void)
         // MCM_readTCSSettings(mcm0, &Sensor_TCSSwitchUp, &Sensor_TCSSwitchDown, &Sensor_TCSKnob);
         launchControlTorqueCalculation(lc, tps, bps, mcm0);
         PID_setGain(pid,3,0,0);
-        powerLimitTorqueCalculation_1(pl,mcm0,pid);
+        
+       // powerLimitTorqueCalculation_1(pl,mcm0,pid);
+       powerLimitTorqueCalculation_2(pl,mcm0,pid,table);
+
         MCM_calculateCommands(mcm0, tps, bps);
 
         SafetyChecker_update(sc, mcm0, bms, tps, bps, &Sensor_HVILTerminationSense, &Sensor_LVBattery);

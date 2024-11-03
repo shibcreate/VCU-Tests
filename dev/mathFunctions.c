@@ -114,3 +114,10 @@ sbyte4 swap_int32(sbyte4 val)
     val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF);
     return (val << 16) | ((val >> 16) & 0xFFFF);
 }
+int int_lowerStepInterval(int value, int increment) {
+    return value - (value % increment);
+}
+int int_upperStepInterval(int value, int increment) {
+    int temp = int_lowerStepInterval(value, increment);
+    return (temp == value?temp:temp + increment);
+}
