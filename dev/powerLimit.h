@@ -9,6 +9,8 @@
 #include "mathFunctions.h"
 #include "initializations.h"
 #include "PID.h"
+#include "hashTable.h"
+
 
 typedef struct _PowerLimit {
      ubyte2 value;
@@ -24,6 +26,6 @@ typedef struct _PowerLimit {
 PowerLimit* PL_new();
 void testing(PowerLimit *me);
 void powerLimitTorqueCalculation_1(PowerLimit *me,  MotorController* mcm, PID* pid);
-void powerLimitTorqueCalculation_2(PowerLimit *me,  MotorController* mcm);
+void powerLimitTorqueCalculation_2(PowerLimit *me,  MotorController* mcm,PID *pid);
 
 #endif

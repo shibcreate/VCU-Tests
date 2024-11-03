@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "derating.h": "c",
-        "mathfunctions.h": "c"
+        "mathfunctions.h": "c",
+        "motorcontroller.h": "c"
     }
 }
