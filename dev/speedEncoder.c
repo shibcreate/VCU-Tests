@@ -15,14 +15,16 @@
 // /*****************************************************************************
 // * Speed Encoder (TPS) functions
 // * RULE EV2.3.5:
-// * If an implausibility occurs between the values of these two sensors the power to the motor(s) must be immediately shut down completely.
-// * It is not necessary to completely deactivate the tractive system, the motor controller(s) shutting down the power to the motor(s) is sufficient.
+// * If an implausibility occurs between the values of these two sensors the power to the motor(s)
+// must be immediately shut down completely.
+// * It is not necessary to completely deactivate the tractive system, the motor controller(s)
+// shutting down the power to the motor(s) is sufficient.
 // ****************************************************************************/
 // SpeedEncoder* SpeedEncoder_new(bool benchMode)
 // {
 //     SpeedEncoder* me = (SpeedEncoder*)malloc(sizeof(struct _SpeedEncoder));
 //     //me->bench = benchMode;
-    
+
 //     //TODO: Make sure the main loop is running before doing this
 //     //me->tps0 = (benchMode == TRUE) ? &Sensor_BenchTPS0 : &Sensor_TPS0;
 //     //me->tps1 = (benchMode == TRUE) ? &Sensor_BenchTPS1 : &Sensor_TPS1;
@@ -34,8 +36,8 @@
 //     me->tps1_reverse = TRUE;
 
 //     // TODO: Fetch from / store in EEPROM
-//     // exponent applied to pedal curve.  1 = linear, < 1 means more speed is given early on, > 1 means speed ramps up more slowly
-//     me->outputCurveExponent = 1.0;
+//     // exponent applied to pedal curve.  1 = linear, < 1 means more speed is given early on, > 1
+//     means speed ramps up more slowly me->outputCurveExponent = 1.0;
 
 //     me->travelPercent = 0;
 //     me->runCalibration = FALSE;  //Do not run the calibration at the next main loop cycle
@@ -75,7 +77,7 @@
 
 //     me->travelPercent = 0;
 //     ubyte2 errorCount = 0;
-    
+
 //     //This function runs before the calibration cycle function.  If calibration is currently
 //     //running, then set the percentage to zero for safety purposes.
 //     if (me->runCalibration == TRUE)
@@ -100,8 +102,9 @@
 //         {
 //             //Calculate individual throttle percentages
 //             //Percent = (Voltage - CalibMin) / (CalibMax - CalibMin)
-//             me->tps0_percent = getPercent(me->tps0_value, me->tps0_calibMin, me->tps0_calibMax, TRUE);
-//             me->tps1_percent = getPercent(me->tps1_value, me->tps1_calibMin, me->tps1_calibMax, TRUE);
+//             me->tps0_percent = getPercent(me->tps0_value, me->tps0_calibMin, me->tps0_calibMax,
+//             TRUE); me->tps1_percent = getPercent(me->tps1_value, me->tps1_calibMin,
+//             me->tps1_calibMax, TRUE);
 
 //             me->travelPercent = (me->tps0_percent + me->tps1_percent) / 2;
 //         }
@@ -111,7 +114,7 @@
 // void SpeedEncoder_resetCalibration(SpeedEncoder* me)
 // {
 //     me->calibrated = FALSE;
-    
+
 //     me->tps0_calibMin = me->tps0->sensorValue;
 //     me->tps0_calibMax = me->tps0->sensorValue;
 //     me->tps1_calibMin = me->tps1->sensorValue;
@@ -146,28 +149,34 @@
 
 // /*-------------------------------------------------------------------
 // * CalibrateTPS
-// * Description: Records TPS minimum/maximum voltages (when?) and stores them (where?), or flags that calibration is complete
+// * Description: Records TPS minimum/maximum voltages (when?) and stores them (where?), or flags
+// that calibration is complete
 // * Parameters:
 // * Inputs:
 // * Returns:
 // * Notes:
 // * Throws:
 // -------------------------------------------------------------------*/
-// // Physical pedal travel will only occur across the center (about 1/2) of the actual sensor's range of travel
-// // The rules (especially EV2.3.6) are written about % of PEDAL travel, not percent of sensor range, so we must calculate pedal travel by recording the min/max voltages at min/max throttle positions
-// void SpeedEncoder_calibrationCycle(SpeedEncoder* me, ubyte1* errorCount)
+// // Physical pedal travel will only occur across the center (about 1/2) of the actual sensor's
+// range of travel
+// // The rules (especially EV2.3.6) are written about % of PEDAL travel, not percent of sensor
+// range, so we must calculate pedal travel by recording the min/max voltages at min/max throttle
+// positions void SpeedEncoder_calibrationCycle(SpeedEncoder* me, ubyte1* errorCount)
 // //THIS FUNCTION SHOULD NOT BE CALLED FROM MAIN
 // {
 //     if (me->runCalibration == TRUE)
 //     {
-//         if (IO_RTC_GetTimeUS(me->timestamp_calibrationStart) < (ubyte4)(me->calibrationRunTime) * 1000 * 1000)
+//         if (IO_RTC_GetTimeUS(me->timestamp_calibrationStart) < (ubyte4)(me->calibrationRunTime) *
+//         1000 * 1000)
 //         {
 //             //The calibration itself
-//             if (me->tps0->sensorValue < me->tps0_calibMin) { me->tps0_calibMin = me->tps0->sensorValue; }
-//             if (me->tps0->sensorValue > me->tps0_calibMax) { me->tps0_calibMax = me->tps0->sensorValue; }
+//             if (me->tps0->sensorValue < me->tps0_calibMin) { me->tps0_calibMin =
+//             me->tps0->sensorValue; } if (me->tps0->sensorValue > me->tps0_calibMax) {
+//             me->tps0_calibMax = me->tps0->sensorValue; }
 
-//             if (me->tps1->sensorValue < me->tps1_calibMin) { me->tps1_calibMin = me->tps1->sensorValue; }
-//             if (me->tps1->sensorValue > me->tps1_calibMax) { me->tps1_calibMax = me->tps1->sensorValue; }
+//             if (me->tps1->sensorValue < me->tps1_calibMin) { me->tps1_calibMin =
+//             me->tps1->sensorValue; } if (me->tps1->sensorValue > me->tps1_calibMax) {
+//             me->tps1_calibMax = me->tps1->sensorValue; }
 
 //         }
 //         else  //Calibration shutdown
@@ -193,7 +202,8 @@
 //     }
 //     else
 //     {
-//         //TODO: Throw warning: calibrationCycle helper function was called but calibration should not be running
+//         //TODO: Throw warning: calibrationCycle helper function was called but calibration should
+//         not be running
 //     }
 
 //     //TODO: Write calibration data to EEPROM
@@ -203,12 +213,13 @@
 //     //TODO: Do something on the display to show that voltages are being recorded
 
 //     //Idea: Display "bars" filling up on right segment (for gas pedal) _=E=_=E...
-//     //      Once calibration data makes sense, show pedal location (0-10%, 10-90%, 90-100%) with bars
+//     //      Once calibration data makes sense, show pedal location (0-10%, 10-90%, 90-100%) with
+//     bars
 
 // }
 
-
-// void SpeedEncoder_getIndividualSensorPercent(SpeedEncoder* me, ubyte1 sensorNumber, float4* percent)
+// void SpeedEncoder_getIndividualSensorPercent(SpeedEncoder* me, ubyte1 sensorNumber, float4*
+// percent)
 // {
 //     switch (sensorNumber)
 //     {
@@ -221,14 +232,14 @@
 //     }
 // }
 
-
 // /*-------------------------------------------------------------------
 // * GetThrottlePosition
 // * Description: Reads TPS Pin voltages and returns % of throttle pedal travel.
 // * Parameters:  None
 // * Inputs:      Assumes TPS#.sensorValue has been set by main loop
 // * Returns:     Throttle value in percent (from 0 to 1)
-// * Notes:       Valid pedal travel is from 10% (0.10) to 90% (0.90), not including mechanical limits.
+// * Notes:       Valid pedal travel is from 10% (0.10) to 90% (0.90), not including mechanical
+// limits.
 // * Throws:      000 - TPS0 voltage out of range
 // *              001 - TPS1 voltage out of range, 002
 // -------------------------------------------------------------------*/
