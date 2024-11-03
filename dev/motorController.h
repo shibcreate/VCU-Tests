@@ -84,6 +84,9 @@ void MCM_update_LaunchControl_State(MotorController *me, bool newLCState);
 void MCM_update_PL_TorqueLimit(MotorController *me, ubyte2 PLTorqueLimit);
 void MCM_update_PL_State(MotorController *me, bool newPLState);
 
+sbyte4 MCM_getDCVoltage(MotorController* me);
+sbyte4 MCM_getDCCurrent(MotorController* me);
+
 sbyte4 MCM_getPower(MotorController* me);
 ubyte2 MCM_getCommandedTorque(MotorController* me);
 

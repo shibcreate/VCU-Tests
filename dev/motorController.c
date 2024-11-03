@@ -900,3 +900,11 @@ float4 MCM_getRegen_PercentAPPSForCoasting(MotorController* me)
 {
     return me->regen_percentAPPSForCoasting;
 }
+
+sbyte4 MCM_getDCVoltage(MotorController* me){
+    me->DC_Voltage;
+}
+
+sbyte4 MCM_getDCCurrent(MotorController* me){
+    me->DC_Current;
+}
