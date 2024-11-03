@@ -48,8 +48,10 @@
 #include "serial.h"
 #include "cooling.h"
 #include "bms.h"
-#include "LaunchControl.h"
+#include "launchControl.h"
 #include "drs.h"
+#include "powerLimit.h"
+#include "PID.h"
 
 //Application Database, needed for TTC-Downloader
 APDB appl_db =
@@ -220,8 +222,11 @@ void main(void)
     SafetyChecker *sc = SafetyChecker_new(serialMan, 320, 32); //Must match amp limits
     CoolingSystem *cs = CoolingSystem_new(serialMan);
     LaunchControl *lc = LaunchControl_new();
-    DRS *drs = DRS_new();
 
+    DRS *drs = DRS_new();
+    PowerLimit *pl = POWERLIMIT_new(); 
+    PID *lcPID = PID_new(200,0,0,0);
+//---------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------
     // TODO: Additional Initial Power-up functions
     // //----------------------------------------------------------------------------
@@ -369,7 +374,6 @@ void main(void)
 
         //Update WheelSpeed and interpolate
         WheelSpeeds_update(wss, TRUE);
-        slipRatioCalculation(wss, lc);
 
         //Cool DRS things
         DRS_update(drs, mcm0, tps, bps);
@@ -420,7 +424,16 @@ void main(void)
         //DOES NOT set inverter command or rtds flag
         //MCM_setRegenMode(mcm0, REGENMODE_FORMULAE); // TODO: Read regen mode from DCU CAN message - Issue #96
         // MCM_readTCSSettings(mcm0, &Sensor_TCSSwitchUp, &Sensor_TCSSwitchDown, &Sensor_TCSKnob);
-        launchControlTorqueCalculation(lc, tps, bps, mcm0);
+        LaunchControl_calculateSlipRatio(lc, wss);
+        LaunchControl_calculateTorqueCommand(lc, tps, bps, mcm0,lcPID);
+        //---------------------------------------------------------------------------------------------------------
+        // input the power limit calculation here from mcm 
+        //---------------------------------------------------------------------------------------------------------
+        // PLMETHOD 1:TQequation+TQPID
+         // PLMETHOD 2:TQequation+PWRPID
+          // PLMETHOD 3: LUT+TQPID
+        PID_updateGainValues(pl->pid, 12,0,0);
+        POWERLIMIT_calculateTorqueCommand(mcm0, pl);
         MCM_calculateCommands(mcm0, tps, bps);
 
         SafetyChecker_update(sc, mcm0, bms, tps, bps, &Sensor_HVILTerminationSense, &Sensor_LVBattery);
@@ -450,7 +463,7 @@ void main(void)
         //canOutput_sendMCUControl(mcm0, FALSE);
 
         //Send debug data
-        canOutput_sendDebugMessage(canMan, tps, bps, mcm0, ic0, bms, wss, sc, lc, drs);
+        canOutput_sendDebugMessage(canMan, tps, bps, mcm0, ic0, bms, wss, sc, lc, pl, drs);
         canOutput_sendDebugMessage1(canMan, mcm0, tps);
         //canOutput_sendSensorMessages();
         //canOutput_sendStatusMessages(mcm0);
