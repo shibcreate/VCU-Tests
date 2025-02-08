@@ -66,17 +66,22 @@ void PID_updateSetpoint(PID *pid, sbyte2 setpoint) {
 
 void PID_computeOutput(PID *pid, sbyte2 sensorValue) {
     sbyte2 currentError = pid->setpoint - sensorValue;
+    pid->Kp = (sbyte1)pid->Kp/10;
+    pid->Ki = (sbyte1)pid->Ki/10;
+    pid->Kd = (sbyte1)pid->Kd/10;
+
     pid->proportional   = -28;//(sbyte2) pid->Kp * currentError / 10;
-    pid->integral       = (sbyte2) ( (sbyte4) pid->Ki * (pid->totalError + currentError) / pid->dH  / 10 );
-    pid->derivative     = (sbyte2) pid->Kd * (currentError - pid->previousError) * pid->dH  / 10;
+    pid->integral       = (sbyte2) ( (sbyte4) pid->Ki * (pid->totalError + currentError) * pid->dH );
+    pid->derivative     = (sbyte2) pid->Kd * (currentError - pid->previousError) * pid->dH ;
     pid->previousError  = currentError;
-    pid->totalError    += (sbyte4)currentError;
+    pid->totalError    += (sbyte4)currentError* pid->dH;
 
     // At minimum, a P(ID) Controller will always use Proportional Control
-    pid->output = pid->proportional;
+    pid->output = pid->proportional+pid->integral+pid->derivative;
+
 
     //Check to see if motor is saturated at max torque request already
-    if(pid->saturationValue >= sensorValue)
+    /*if(pid->saturationValue >= sensorValue)
     {
         pid->antiWindupFlag = FALSE;
         pid->output += pid->integral;
@@ -86,6 +91,7 @@ void PID_computeOutput(PID *pid, sbyte2 sensorValue) {
         pid->antiWindupFlag = TRUE;
 
     //return pid->output;
+    */
 }
 
 /** GETTER FUNCTIONS **/
