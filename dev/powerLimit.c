@@ -37,7 +37,7 @@ PowerLimit* POWERLIMIT_new(){
     //4. Both TQ equation and LUT together-(Final Algorithm)
     me->plStatus = FALSE;
     me->plTorqueCommand = 0; 
-    me->plTargetPower = 55;// HERE IS WHERE YOU CHANGE POWERLIMIT
+    me->plTargetPower = 78;// HERE IS WHERE YOU CHANGE POWERLIMIT
     me->plKwLimit = 80;
     me->plInitializationThreshold = me->plTargetPower - 15;
     me->clampingMethod = 1;
